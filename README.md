@@ -11,8 +11,8 @@ and fine-tuning.
 
 ## Marking the Entries
 
-To mark a Term to be included into the glossary, it can be marked with the `gls`
-function. The simplest form is like this:
+To include a term into the glossary, it can be marked with the `gls` function. The 
+simplest form is like this:
 
 ```typ
 This is how to mark something for the glossary in #gls[Typst].
@@ -36,10 +36,10 @@ The "pool of entries" is a typst dictionary. It can be read from a file, like in
 sample, or may be the result of other operations.
 
 The pool is then given to the `make-glossary()` function. This will create a
-glossary page of all referenced entries. The pool consists of a dictionary of entries. The
-key of an entry is the term. Note that it is case-sensitive. Each entry itself is also a
-dictionary, and its main key is `description`. This is the content for the term. There may
-be other keys in an entry in the future. For now, it supports:
+glossary page of all referenced entries. The pool consists of a dictionary of definition 
+entries. The key of an entry is the term. Note, that it is case-sensitive. Each entry 
+itself is also a dictionary, and its main key is `description`. This is the content for
+the term. There may be other keys in an entry in the future. For now, it supports:
 
 - description
 - link
