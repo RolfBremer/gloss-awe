@@ -95,9 +95,9 @@ The result looks like this:
 <span style="font-size:9pt">
 <hr>
 
-More usage samples are shown in the document `sample-usage.typ`.
+More usage samples are shown in the document [sample-usage.typ](./sample-usage.typ).
 
-The resulting PDF is also available as `sample-usage.pdf`.
+The resulting PDF is also available as [sample-usage.pdf](./sample-usage.pdf).
 
 The folder `VSSpell` and the file `cSpell.json` are spell checker configuration files used
 by VSCode.
