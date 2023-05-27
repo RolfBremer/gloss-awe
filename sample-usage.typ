@@ -77,6 +77,11 @@ This is a #gls(entry: "example")[sample] to demonstrate _glossary_.
 In this case, the entry for "example" is taken from the glossary pool, while in the
 document the term "sample" is used.
 
+=== Complex Content
+
+To reference a Glossary entry with a complex name, like this `#gls[Complex~Content]`
+
+
 === Casing
 
 Note that the #gls(entry: "Casing")[casing] of the entries matter. It may sometimes be
@@ -163,7 +168,7 @@ words, but that's another story.
 
 = Glossary
 
-To create the glossary page, we load the #gls(entry: "Glossary Pool")[glossary pool] from
+To create the glossary page, we load the #gls(entry: "Glossary Pool")[glossary~pool] from
 a file and call the `make-glossary()` function with it.
 
 Here we generate the glossary page with referenced entries in two columns:

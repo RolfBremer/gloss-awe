@@ -14,12 +14,23 @@
 #let gls(entry: none, display) = figure(display, caption: entry, numbering: none, kind: "jkrb_glossary")
 
 #let figure-title(figure) = {
+    let ct = ""
     if figure.caption == none {
-        figure.body.text
+        if figure.body.has("text") {
+            ct = figure.body.text
+        }
+        else {
+            for cc in figure.body.children {
+                if cc.has("text") {
+                    ct += cc.text
+                }
+            }
+        }
     }
     else{
-        figure.caption.text
+        ct = figure.caption.text
     }
+    return ct
 }
 
 // This function creates a glossary page with entries for every term
