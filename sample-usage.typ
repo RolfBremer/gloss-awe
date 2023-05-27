@@ -2,11 +2,14 @@
 
 // This typst file demonstrates the usage of the glossary package.
 #set text(lang: "en", font: "Arial", size: 10pt)
-#set heading(numbering: "1.1")
 #show raw: it => {set text(size: 11pt); it}
 
 // glossary-marker display : this rule makes the glossary marker in the document visible.
-#show figure.where(kind: "jkrb_glossary"): it => {it.body}
+// #show figure.where(kind: "jkrb_glossary"): it => {it.body}
+
+// glossary-marker display : this rule makes the glossary marker visible
+// and adds a hyperlink to the Glossar.
+#show figure.where(kind: "jkrb_glossary"): it => [#link(<Glossar>)[#it.body]]
 
 // Format headings
 #set heading(numbering: none)
@@ -167,6 +170,8 @@ words, but that's another story.
 #pagebreak()
 
 = Glossary
+
+<Glossar>
 
 To create the glossary page, we load the #gls(entry: "Glossary Pool")[glossary~pool] from
 a file and call the `make-glossary()` function with it.
