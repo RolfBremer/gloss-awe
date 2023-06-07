@@ -35,11 +35,16 @@ To control, how the markers are rendered in the document, a show rule has to be 
 The "pool of entries" is a typst dictionary. It can be read from a file, like in this
 sample, or may be the result of other operations.
 
-The pool is then given to the `make-glossary()` function. This will create a
-glossary page of all referenced entries. The pool consists of a dictionary of definition 
-entries. The key of an entry is the term. Note, that it is case-sensitive. Each entry 
-itself is also a dictionary, and its main key is `description`. This is the content for
-the term. There may be other keys in an entry in the future. For now, it supports:
+One or more pool(s) are then given to the `make-glossary()` function. This will create a
+glossary page of all referenced entries. If given more than one pool, the order pools are
+searched in the order they are given to the method. The first match wins. This can be used
+to have a global pool to be used in different documents, and another one for local usage
+only.
+
+The pool consists of a dictionary of definition entries. The key of an entry is the term.
+Note, that it is case-sensitive. Each entry itself is also a dictionary, and its main key
+is `description`. This is the content for the term. There may be other keys in an entry in
+the future. For now, it supports:
 
 - description
 - link
@@ -94,6 +99,20 @@ The result looks like this:
 
 <span style="font-size:9pt">
 <hr>
+
+To use more than one pool, this can be used instead:
+
+```typ
+#import "/Global/GlossaryPool.typ": glossary-pool
+#import "/Global/LocalGlossaryPool.typ": local-glossary-pool
+
+#columns(2)[
+    #make-glossary(local-glossary-pool, glossary-pool)
+]
+```
+
+Using this, the local pool takes precedence over the global pool, because it is the first
+parameter.
 
 More usage samples are shown in the document [sample-usage.typ](./sample-usage.typ).
 

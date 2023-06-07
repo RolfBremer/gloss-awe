@@ -43,8 +43,7 @@
 
             Derived from web search results: In Git, a Commit-SHA is a 40-character
             hexadecimal string that specifies a 160-bit SHA-1 hash. It is used to identify
-            a commit. Sometimes, you will see the shorthand version which is just the
-            first seven characters of the actual commit ID versus the full hash.
+            a commit.
 
         ]
     ),
@@ -144,9 +143,6 @@
 
             (2) Example Definition & Meaning - Merriam-Webster.
             https://www.merriam-webster.com/dictionary/example (13.5.2023)
-
-            (3) EXAMPLE | definition in the Cambridge English Dictionary.
-            https://dictionary.cambridge.org/us/dictionary/english/example (13.5.2023)
 
         ]
     ),

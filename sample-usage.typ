@@ -135,6 +135,14 @@ The index markers now show up in the resulting document and can easily be review
     ]
 ]
 
+== The Glossary Pool
+
+The pool contains the definitions for the entries. In this sample, we read the pool from
+one or more files -- here from typst files. But they may also be #gls[XML]-Files or other
+sources. The `make-glossary()` method can take more than one pool at once. The matching of
+marked entries is done in the order the pools where given in the parameters of the method. The first match wins.
+
+
 == The Glossary Page
 
 To actually create the glossary page, the `make-glossary()` function has to be called. Of course,
@@ -142,16 +150,16 @@ it can be embedded into an appropriately formatted environment, like this:
 
 ```typ
 #columns(2)[
-    #make-glossary()
+    #make-glossary(glossary-pool)
 ]
 ```
 
 = Why Having a Glossary in Times of Search Functionality?
 
 A well-defined Glossary can be very helpful in documents where very specific meanings of
-certain Terms are used. For example, the term "#gls[Context]". In a specific document it
+certain Terms are used. For example, the term "Context". In a specific document it
 may refer not to the general context, but may be used for a specific data structure in a
-system. In another document it may refer to a typesetting system with the name "#gls[ConTeXt]".
+system. In another document it may refer to a typesetting system with the name "ConTeXt".
 A Glossary can be used to define things for the document's context. It is used to agree on
 a #gls(entry: "Common Definition")[common definition] of Terms used in the document.
 
@@ -184,4 +192,19 @@ Here we generate the glossary page with referenced entries in two columns:
 
 #columns(2)[
     #make-glossary(glossary-pool)
+]
+
+#pagebreak(weak: true)
+
+= Glossary (with additional local pool)
+
+This Glossary uses an additional glossary pool file to resolve the marked entries.
+
+#line(length: 100%, stroke: .1pt + gray)
+
+#import "/Global/GlossaryPool.typ": glossary-pool
+#import "/Global/LocalGlossaryPool.typ": local-glossary-pool
+
+#columns(2)[
+    #make-glossary(local-glossary-pool, glossary-pool)
 ]

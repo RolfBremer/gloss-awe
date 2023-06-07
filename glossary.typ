@@ -13,38 +13,51 @@
 // for the mapping.
 #let gls(entry: none, display) = figure(display, caption: entry, numbering: none, kind: "jkrb_glossary")
 
-#let figure-title(figure) = {
-    let ct = ""
-    if figure.caption == none {
-        if figure.body.has("text") {
-            ct = figure.body.text
-        }
-        else {
-            for cc in figure.body.children {
-                if cc.has("text") {
-                    ct += cc.text
-                }
-            }
-        }
-    }
-    else{
-        ct = figure.caption.text
-    }
-    return ct
-}
-
 // This function creates a glossary page with entries for every term
 // in the document marked with `gls[term]`.
 #let make-glossary(
-    // The glossary data.
-    glossary,
-
     // Indicate missing entries.
     missing: text(fill: red, weight: "bold")[ No glossary entry ],
 
     // Function to format the Header of the entry.
-    heading: it => { heading(level: 2, numbering: none, outlined: false, it)}
+    heading: it => { heading(level: 2, numbering: none, outlined: false, it)},
+
+    // The glossary data.
+    ..glossaries
+
     ) = {
+
+    let figure-title(figure) = {
+        let ct = ""
+        if figure.caption == none {
+            if figure.body.has("text") {
+                ct = figure.body.text
+            }
+            else {
+                for cc in figure.body.children {
+                    if cc.has("text") {
+                        ct += cc.text
+                    }
+                }
+            }
+        }
+        else{
+            ct = figure.caption.text
+        }
+        return ct
+    }
+
+    let lookup(key, glossaries) = {
+        let entry = none
+        for glossary in glossaries.pos() {
+            if glossary.keys().contains(key) {
+                let entry = glossary.at(key)
+                return entry
+            }
+        }
+        return entry
+    }
+
     locate(loc => {
         let words = ()  //empty array
         let elements = query(figure.where(kind: "jkrb_glossary"), loc)
@@ -53,15 +66,14 @@
             if words.contains(t) { continue }
             words.push(t)
             heading(t)
-            if not glossary == none {
-                if glossary.keys().contains(t) {
-                    glossary.at(t).description
-                    if glossary.at(t).keys().contains("link") {
-                        glossary.at(t).link
-                    }
-                } else {
-                    missing
+            let e = lookup(t, glossaries)
+            if e != none {
+                e.description
+                if e.keys().contains("link") {
+                    e.link
                 }
+            } else {
+                missing
             }
         }
     })
