@@ -3,7 +3,8 @@
 Automatically create a glossary in [typst](https://typst.app/).
 
 This typst component creates a glossary page from a given pool of potential glossary
-entries using only those entries, that are marked with the `gls` function in the document.
+entries using only those entries, that are marked with the `gls` or `gls-add` functions in
+the document. See sample-usage document for details.
 
 ⚠️ Typst is in beta and evolving, and this package evolves with it. As a result, no
 backward compatibility is guaranteed yet. Also, the package itself is under development
@@ -11,7 +12,7 @@ and fine-tuning.
 
 ## Marking the Entries
 
-To include a term into the glossary, it can be marked with the `gls` function. The 
+To include a term into the glossary, it can be marked with the `gls` function. The
 simplest form is like this:
 
 ```typ

@@ -25,7 +25,7 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[A Glossary Package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.2 (12. Mai 2023)]
+    #text(size: 12pt)[Version 0.3 (18.6.2023)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #v(4em)
@@ -43,8 +43,8 @@ Using the glossary package in a #gls(entry: "Typst")[typst] document consists of
 + Importing the package `glossary.typ`.
 + Marking the words or phrases to include in the glossary with `gls[]`.
 + Defining the show rule for the marker.
-+ Read in the glossary pool (from a file or elsewhere).
-+ Generating the glossary page by calling the `make-glossary(glossary-pool)` function.
++ Read in one or more glossary pool(s) (from file(s) or elsewhere).
++ Generating the glossary page by calling the `make-glossary(..glossary-pool)` function.
 
 
 == Importing the Package
@@ -80,10 +80,22 @@ This is a #gls(entry: "example")[sample] to demonstrate _glossary_.
 In this case, the entry for "example" is taken from the glossary pool, while in the
 document the term "sample" is used.
 
+
 === Complex Content
 
-To reference a Glossary entry with a complex name, like this `#gls[Complex~Content]`
+To reference a Glossary entry with a complex name, like this #gls[Complex Content]
+containing a whitespace, it is a good idea to use the entry parameter of the
+`gls`-function, to map it to a non-complex entry in a glossary pool, or, create the pool
+entry with a string as its key (see sample code!).
 
+
+=== Glossary Entries not in the Document Content
+
+It is also possible to reference glossary entries without having them occur in the content
+of the document. They will only appear in the glossary. The function
+`#gls-add[Keyword]` can be used to create such a reference.
+
+#gls-add[Amaranth]
 
 === Casing
 

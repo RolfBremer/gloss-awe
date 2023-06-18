@@ -13,6 +13,9 @@
 // for the mapping.
 #let gls(entry: none, display) = figure(display, caption: entry, numbering: none, kind: "jkrb_glossary")
 
+// Add a keyword to the glossary, even if it is not in the documents content.
+#let gls-add(entry) = figure([], caption: entry, numbering: none, kind: "jkrb_glossary")
+
 // This function creates a glossary page with entries for every term
 // in the document marked with `gls[term]`.
 #let make-glossary(
