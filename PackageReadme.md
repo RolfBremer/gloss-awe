@@ -13,16 +13,16 @@ and fine-tuning.
 ## Table of Contents
 
 * [Usage](#usage)
-    * [Marking the Entries](#marking-the-entries)
-    * [Controlling the Show](#controlling-the-show)
-    * [Hiding Entries from the Glossary Page](#hiding-entries-from-the-glossary-page)
-    * [Pool of Entries](#pool-of-entries)
-    * [Unknown Entries](#unknown-entries)
-    * [Creating the glossary page](#creating-the-glossary-page)
+  * [Marking the Entries](#marking-the-entries)
+  * [Controlling the Show](#controlling-the-show)
+  * [Hiding Entries from the Glossary Page](#hiding-entries-from-the-glossary-page)
+  * [Pool of Entries](#pool-of-entries)
+  * [Unknown Entries](#unknown-entries)
+  * [Creating the glossary page](#creating-the-glossary-page)
 * [Changelog](#changelog)
-    * [v0.0.4](#v004)
-    * [v0.0.3](#v003)
-    * [v0.0.2](#v002)
+  * [v0.0.4](#v004)
+  * [v0.0.3](#v003)
+  * [v0.0.2](#v002)
 
 ## Usage
 
@@ -243,14 +243,15 @@ A more complex sample PDF is available there as well.
 
 ### v0.0.4
 
-- Added support for hidden glossary entries.
-- Added a Changelog to this readme.
+* Breaking: Renamed the main file from `glossary.typ` to `gloss-awe.typ` to match package.
+* Added support for hidden glossary entries.
+* Added a Changelog to this readme.
 
 ### v0.0.3
 
-- Added support for package manager in Typst.
-- Add `gls-add[...]` function for entries that are not in the document.
+* Added support for package manager in Typst.
+* Add `gls-add[...]` function for entries that are not in the document.
 
 ### v.0.0.2
 
-- Moved version to Github.
+* Moved version to Github.

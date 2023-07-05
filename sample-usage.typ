@@ -1,4 +1,4 @@
-#import "./glossary.typ": *
+#import "./gloss-awe.typ": *
 
 // This typst file demonstrates the usage of the glossary package.
 #set text(lang: "en", font: "Arial", size: 10pt)
@@ -8,8 +8,8 @@
 // #show figure.where(kind: "jkrb_glossary"): it => {it.body}
 
 // glossary-marker display : this rule makes the glossary marker visible
-// and adds a hyperlink to the Glossar.
-#show figure.where(kind: "jkrb_glossary"): it => [#link(<Glossar>)[#it.body]]
+// and adds a hyperlink to the "Glossary" label.
+#show figure.where(kind: "jkrb_glossary"): it => [#link(<Glossary>)[#it.body]]
 
 // Format headings
 #set heading(numbering: none)
@@ -41,7 +41,7 @@ warnings for marked entries, that cannot be found in the entry pool.
 Using the glossary package in a #gls(entry: "Typst")[typst] document consists of some
 simple steps:
 
-+ Importing the package `glossary.typ`.
++ Importing the package `gloss-awe`.
 + Marking the words or phrases to include in the glossary with `gls[]`.
 + Defining the show rule for the marker.
 + Read in one or more glossary pool(s) (from file(s) or elsewhere).
@@ -55,7 +55,7 @@ The glossary package is currently available on GitHub
 breaking changes in its next #gls[iteration].
 
 ```typ
-    #import "./glossary.typ": *
+    #import "./gloss-awe.typ": *
 ```
 
 The package is also available via Typst's build in Package Manager:
@@ -220,7 +220,7 @@ words, but that's another story.
 
 = Glossary
 
-<Glossar>
+<Glossary>
 
 To create the glossary page, we load the #gls(entry: "Glossary Pool")[glossary~pool] from
 a file and call the `make-glossary()` function with it.

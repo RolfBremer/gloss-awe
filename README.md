@@ -12,14 +12,14 @@ and fine-tuning.
 
 ## Adding the package to your project
 
-The package can either be added to your project by adding the main file `glossary.typ` and
+The package can either be added to your project by adding the main file `gloss-awe.typ` and
 importing it, or by importing the package via the typst package manager (available from
 Typst version 0.6.0 or later).
 
 ### Importing from File
 
 ```typ
-    #import "glossary.typ": *
+    #import "gloss-awe.typ": *
 ```
 
 ### Importing via Typst Package Manager
