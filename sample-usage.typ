@@ -38,7 +38,8 @@ This package can create a glossary for a document. The glossary entries are pull
 pool of entries using only entries, that are marked in the document. The package creates
 warnings for marked entries, that cannot be found in the entry pool.
 
-Using the glossary package in a #gls(entry: "Typst")[typst] document consists of some simple steps:
+Using the glossary package in a #gls(entry: "Typst")[typst] document consists of some
+simple steps:
 
 + Importing the package `glossary.typ`.
 + Marking the words or phrases to include in the glossary with `gls[]`.
@@ -54,9 +55,16 @@ The glossary package is currently available on GitHub
 breaking changes in its next #gls[iteration].
 
 ```typ
-#import "./glossary.typ": *
+    #import "./glossary.typ": *
 ```
 
+The package is also available via Typst's build in Package Manager:
+
+```typ
+    #import "@preview/gloss-awe:0.0.4": *
+```
+
+Note, that the version number ("0.0.4") have to be adapted to get the wanted version.
 
 == Marking of Entries
 
@@ -147,18 +155,38 @@ The index markers now show up in the resulting document and can easily be review
     ]
 ]
 
+
+=== Hiding entries from the glossary page
+
+It is also possible to hide entries (temporarily) from the generated glossary page without
+removing any markers for them from the document.
+
+The following sample will hide the entries for "Amaranth" and "Butterscotch" from the
+glossary, even if it is marked with `gls[...]` or `gls-add[...]` somewhere in the
+document.
+
+```typ
+    #let hidden-entries = (
+        "Amaranth",
+        "Butterscotch"
+    )
+
+    #make-glossary(glossary-pool, excluded: hidden-entries)
+```
+
 == The Glossary Pool
 
 The pool contains the definitions for the entries. In this sample, we read the pool from
 one or more files -- here from typst files. But they may also be #gls[XML]-Files or other
 sources. The `make-glossary()` method can take more than one pool at once. The matching of
-marked entries is done in the order the pools where given in the parameters of the method. The first match wins.
+marked entries is done in the order the pools where given in the parameters of the method.
+The first match wins.
 
 
 == The Glossary Page
 
-To actually create the glossary page, the `make-glossary()` function has to be called. Of course,
-it can be embedded into an appropriately formatted environment, like this:
+To actually create the glossary page, the `make-glossary()` function has to be called. Of
+course, it can be embedded into an appropriately formatted environment, like this:
 
 ```typ
 #columns(2)[
@@ -189,24 +217,31 @@ words, but that's another story.
 
 #pagebreak()
 
+
 = Glossary
 
 <Glossar>
 
 To create the glossary page, we load the #gls(entry: "Glossary Pool")[glossary~pool] from
 a file and call the `make-glossary()` function with it.
-
 Here we generate the glossary page with referenced entries in two columns:
 
 #line(length: 100%, stroke: .1pt + gray)
 
+// We hide these entries in the glossary, even if is marked in the document.
+#let hidden-entries = (
+    "Amaranth",
+    "Artificial"
+)
+
 #import "/Global/GlossaryPool.typ": glossary-pool
 
 #columns(2)[
-    #make-glossary(glossary-pool)
+    #make-glossary(glossary-pool, excluded: hidden-entries)
 ]
 
 #pagebreak(weak: true)
+
 
 = Glossary (with additional local pool)
 
@@ -218,5 +253,5 @@ This Glossary uses an additional glossary pool file to resolve the marked entrie
 #import "/Global/LocalGlossaryPool.typ": local-glossary-pool
 
 #columns(2)[
-    #make-glossary(local-glossary-pool, glossary-pool)
+    #make-glossary(local-glossary-pool, glossary-pool, excluded: hidden-entries)
 ]

@@ -25,6 +25,9 @@
     // Function to format the Header of the entry.
     heading: it => { heading(level: 2, numbering: none, outlined: false, it)},
 
+    // This array contains entry titles to exclude from the generated glossary page.
+    excluded: (),
+
     // The glossary data.
     ..glossaries
 
@@ -63,7 +66,19 @@
 
     locate(loc => {
         let words = ()  //empty array
-        let elements = query(figure.where(kind: "jkrb_glossary"), loc)
+
+        // find all marked elements
+        let all-elements = query(figure.where(kind: "jkrb_glossary"), loc)
+
+        // only use the not hidden elements
+        let elements = ()
+        for e in all-elements {
+            if figure-title(e) not in excluded {
+                elements.push(e)
+            }
+        }
+
+        // extract the titles
         let titles = elements.map(e => figure-title(e)).sorted()
         for t in titles {
             if words.contains(t) { continue }
