@@ -58,7 +58,7 @@ breaking changes in its next #gls[iteration].
     #import "./gloss-awe.typ": *
 ```
 
-The package is also available via Typst's build in Package Manager:
+The package is also available via Typst's build-in Package Manager:
 
 ```typ
     #import "@preview/gloss-awe:0.0.4": *
