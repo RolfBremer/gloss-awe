@@ -25,7 +25,7 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[A Glossary Package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.3 (18.6.2023)]
+    #text(size: 12pt)[Version 0.5 (12.9.2023)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #v(4em)

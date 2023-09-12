@@ -241,6 +241,10 @@ A more complex sample PDF is available there as well.
 
 ## Changelog
 
+### v0.0.5
+
+* Address change in `figure.caption` in typst (commit: 976abdf ).
+
 ### v0.0.4
 
 * Breaking: Renamed the main file from `glossary.typ` to `gloss-awe.typ` to match package.

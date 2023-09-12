@@ -51,7 +51,7 @@
             if figure.caption.has("body"){
                 ct = figure.caption.body.text
             }
-            else{
+            else{ // This is for the pre-976abdf behavior of typst.
                 ct = figure.caption.text
             }
         }
