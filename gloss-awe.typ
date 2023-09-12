@@ -48,7 +48,12 @@
             }
         }
         else{
-            ct = figure.caption.text
+            if figure.caption.has("body"){
+                ct = figure.caption.body.text
+            }
+            else{
+                ct = figure.caption.text
+            }
         }
         return ct
     }
