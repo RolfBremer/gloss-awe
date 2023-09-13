@@ -20,6 +20,7 @@ and fine-tuning.
   * [Unknown Entries](#unknown-entries)
   * [Creating the glossary page](#creating-the-glossary-page)
 * [Changelog](#changelog)
+  * [v0.0.5](#v005)
   * [v0.0.4](#v004)
   * [v0.0.3](#v003)
   * [v0.0.2](#v002)
@@ -120,7 +121,7 @@ function. The following listing shows a complete sample document with a glossary
 sample glossary pool is contained in the main document as well:
 
 ```typ
-    #import "@preview/gloss-awe:0.0.4": *
+    #import "@preview/gloss-awe:0.0.5": *
 
     // Text settings
     #set text(font: ("Arial", "Trebuchet MS"), size: 12pt)
