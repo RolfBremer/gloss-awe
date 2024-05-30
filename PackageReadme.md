@@ -20,6 +20,7 @@ and fine-tuning.
   * [Unknown Entries](#unknown-entries)
   * [Creating the glossary page](#creating-the-glossary-page)
 * [Changelog](#changelog)
+  * [v0.1.0](#v010)
   * [v0.0.5](#v005)
   * [v0.0.4](#v004)
   * [v0.0.3](#v003)
@@ -40,13 +41,14 @@ The function will render as defined with the specified show rule (see below!).
 
 ### Controlling the Show
 
-To control, how the markers are rendered in the document, a show rule has to be defined.
-It usually looks like the following:
+To control, how the markers are rendered in the document, a function can be provided for the markers:
 
 ```typ
-// marker display : this rule makes the glossary marker in the document visible.
-#show figure.where(kind: "jkrb_glossary"): it => {it.body}
+#gls(showmarker: m => [_#m_])[Butterscotch]
 ```
+
+This sample will display the marked word as bold in the document.
+
 
 ### Hiding Entries from the Glossary Page
 
@@ -82,8 +84,8 @@ Note, that it is case-sensitive. Each entry itself is also a dictionary, and its
 is `description`. This is the content for the term. There may be other keys in an entry in
 the future. For now, it supports:
 
-- description
-- link
+* description
+* link
 
 An entry in the pool for the term "Engine" file may look like this:
 
@@ -121,7 +123,7 @@ function. The following listing shows a complete sample document with a glossary
 sample glossary pool is contained in the main document as well:
 
 ```typ
-    #import "@preview/gloss-awe:0.0.5": *
+    #import "@preview/gloss-awe:0.1.0": *
 
     // Text settings
     #set text(font: ("Arial", "Trebuchet MS"), size: 12pt)
@@ -241,6 +243,13 @@ A more complex sample PDF is available there as well.
 </span>
 
 ## Changelog
+
+### v0.1.0
+
+* Add an optional parameter `sort: k => k` to make-glossary() to provide a method to
+  determine the sort key.
+* Remove the (mis-)usage of figures to mark glossary entries. This also removes the
+  requirement to have a show rule for those figures defined to suppress the markers.
 
 ### v0.0.5
 

@@ -25,7 +25,7 @@ Typst version 0.6.0 or later).
 ### Importing via Typst Package Manager
 
 ```typ
-    #import "@preview/gloss-awe:0.0.4"
+    #import "@preview/gloss-awe:0.1.0"
 ```
 
 ### Generating the Glossary

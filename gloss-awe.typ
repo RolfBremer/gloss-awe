@@ -1,20 +1,51 @@
 // Copyright 2023 Rolf Bremer, Jutta Klebe
 
+
+// Extracts (nested) content or text to content
+#let content-as-text( element, sep: "" ) = {
+    if type(element) == "content" {
+        if element.has("text") {
+            element.text
+        } else if element.has("children") {
+            element.children.map(text).join(sep)
+        } else if element.has("child") {
+            content-as-text(element.child)
+        } else if element.has("body") {
+            content-as-text(element.body)
+        } else {
+            element
+        }
+    } else if type(element) in ("array", "dictionary") {
+        return ""
+    }
+    else if element == none {
+        return element
+    }
+    else {
+        str(element)
+    }
+}
+
 // gls[term]: Marks a term in the document as referenced.
 // gls(glossary-term)[term]: Marks a term in the document as referenced with a
 // different expression ("glossary-term") in the glossary.
-
-// To ensure that the marked entries are displayed properly, it is also required
-// to use a show rule, like the following:
-// #show figure.where(kind: "jkrb_glossary"): it => {it.body}
-
-// We use a figure element to store the marked text and an optional
-// reference to be used to map to the glossary. If the latter is empty, we use the body
-// for the mapping.
-#let gls(entry: none, display) = figure(display, caption: entry, numbering: none, kind: "jkrb_glossary")
+#let gls(entry: none, showmarker: m => m, display) = locate(loc => [
+    #showmarker(display)
+    #metadata((
+        location: loc.position(),
+        entry: content-as-text(entry),
+        display: display
+    ))<jkrb-gloss-awe>
+])
 
 // Add a keyword to the glossary, even if it is not in the documents content.
-#let gls-add(entry) = figure([], caption: entry, numbering: none, kind: "jkrb_glossary")
+#let gls-add(entry) = locate(loc => [
+    #metadata((
+        location: loc.position(),
+        entry: content-as-text(entry),
+    ))<jkrb-gloss-awe>
+])
+
 
 // This function creates a glossary page with entries for every term
 // in the document marked with `gls[term]`.
@@ -28,34 +59,16 @@
     // This array contains entry titles to exclude from the generated glossary page.
     excluded: (),
 
+    // Function used to sort by.
+    sort-key: k => k,
+
     // The glossary data.
     ..glossaries
 
     ) = {
 
-    let figure-title(figure) = {
-        let ct = ""
-        if figure.caption == none {
-            if figure.body.has("text") {
-                ct = figure.body.text
-            }
-            else {
-                for cc in figure.body.children {
-                    if cc.has("text") {
-                        ct += cc.text
-                    }
-                }
-            }
-        }
-        else{
-            if figure.caption.has("body"){
-                ct = figure.caption.body.text
-            }
-            else{ // This is for the pre-976abdf behavior of typst.
-                ct = figure.caption.text
-            }
-        }
-        return ct
+    let get-title(glossmeta) = {
+        return if glossmeta.value.entry == none { glossmeta.value.display.text } else { glossmeta.value.entry }
     }
 
     let lookup(key, glossaries) = {
@@ -73,18 +86,18 @@
         let words = ()  //empty array
 
         // find all marked elements
-        let all-elements = query(figure.where(kind: "jkrb_glossary"), loc)
+        let all-elements = query(<jkrb-gloss-awe>, loc)
 
         // only use the not hidden elements
         let elements = ()
         for e in all-elements {
-            if figure-title(e) not in excluded {
+            if get-title(e) not in excluded {
                 elements.push(e)
             }
         }
 
         // extract the titles
-        let titles = elements.map(e => figure-title(e)).sorted()
+        let titles = elements.map(e => get-title(e)).sorted(key: sort-key)
         for t in titles {
             if words.contains(t) { continue }
             words.push(t)
@@ -101,3 +114,4 @@
         }
     })
 }
+

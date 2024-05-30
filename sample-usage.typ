@@ -2,14 +2,7 @@
 
 // This typst file demonstrates the usage of the glossary package.
 #set text(lang: "en", font: "Arial", size: 10pt)
-#show raw: it => {set text(size: 11pt); it}
-
-// glossary-marker display : this rule makes the glossary marker in the document visible.
-// #show figure.where(kind: "jkrb_glossary"): it => {it.body}
-
-// glossary-marker display : this rule makes the glossary marker visible
-// and adds a hyperlink to the "Glossary" label.
-#show figure.where(kind: "jkrb_glossary"): it => [#link(<Glossary>)[#it.body]]
+#show raw: it => {set text(size: 1.1em); it}
 
 // Format headings
 #set heading(numbering: none)
@@ -25,32 +18,50 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[A Glossary Package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.5 (12.9.2023)]
+    #text(size: 12pt)[Version 0.1.0 (29.1.2024)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #v(4em)
 ]
 
 
-= Sample Document to Demonstrate the Typst-Glossary
+= Sample Document to Demonstrate the Package Gloss-Awe
 
-This package can create a glossary for a document. The glossary entries are pulled from a
-pool of entries using only entries, that are marked in the document. The package creates
-warnings for marked entries, that cannot be found in the entry pool.
+#grid(
+    columns: (1fr, 1fr),
+    [
 
-Using the glossary package in a #gls(entry: "Typst")[typst] document consists of some
-simple steps:
+        This package can create a glossary for a document. The glossary entries are pulled from a
+        pool of entries using only entries, that are marked in the document. The package creates
+        warnings for marked entries, that cannot be found in the entry pool.
 
-+ Importing the package `gloss-awe`.
-+ Marking the words or phrases to include in the glossary with `gls[]`.
-+ Defining the show rule for the marker.
-+ Read in one or more glossary pool(s) (from file(s) or elsewhere).
-+ Generating the glossary page by calling the `make-glossary(..glossary-pool)` function.
+        Using the glossary package in a
+        #gls(entry: "Typst", showmarker: m => text(weight: "bold", fill: green, m), [typst])
+        document consists of some simple steps:
+
+        + Importing the package `gloss-awe`.
+        + Marking the words or phrases to include in the glossary with `gls[]`.
+        + Optional: Defining a showmarker for the marker.
+        + Read in one or more glossary pool(s) (from file(s) or elsewhere).
+        + Generating the glossary page by calling the `make-glossary(..glossary-pool)` function.
+
+    ],
+    [
+
+        #figure(
+            image("/Global/Pics/Screenshot Glossary.png", width: 90%),
+            caption: [Glossary Page],
+        )
+
+    ]
+
+)
+
 
 
 == Importing the Package
 
-The glossary package is currently available on GitHub
+The glossary package is available on GitHub
 (https://github.com/RolfBremer/typst-glossary). It is still in development and may have
 breaking changes in its next #gls[iteration].
 
@@ -61,16 +72,17 @@ breaking changes in its next #gls[iteration].
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/gloss-awe:0.0.4": *
+    #import "@preview/gloss-awe:0.1.0": *
 ```
 
-Note, that the version number ("0.0.4") have to be adapted to get the wanted version.
+Note, that the version number ("0.1.0") have to be adapted to get the wanted version.
+
 
 == Marking of Entries
 
 We have marked several words to be included in the glossary page at the end of the
-document. The markup for the entry stays visible. Its location in the text gets marked,
-and later it is shown as a page reference on the glossary page.
+document. Its location in the text gets marked, and later it is shown as a page reference
+on the glossary page.
 
 ```typ
 This is a #gls[sample] to demonstrate _glossary_.
@@ -97,7 +109,7 @@ containing a whitespace, it is a good idea to use the entry parameter of the
 entry with a string as its key (see sample code!).
 
 
-=== Glossary Entries not in the Document Content
+=== Glossary Entries that are not in the Documents Content
 
 It is also possible to reference glossary entries without having them occur in the content
 of the document. They will only appear in the glossary. The function
@@ -105,7 +117,26 @@ of the document. They will only appear in the glossary. The function
 
 #gls-add[Amaranth]
 
-=== Casing
+
+== Defining a showmarker
+
+For review reasons, the marked entries can be mae more visible in the resulting
+document. For example like here:
+
+// Here we define to show the marked glossary entries ...
+#let my-gls = gls.with(showmarker: w => text(fill: teal, [#w]))
+
+```typ
+#let my-gls = gls.with(showmarker: w => text(fill: teal, [#w]))
+```
+
+This function can be used to mark entries that then appear colored in the
+#my-gls[typst] document.
+
+The index markers now show up in the resulting document and can easily be reviewed.
+
+
+== Casing
 
 Note that the #gls(entry: "Casing")[casing] of the entries matter. It may sometimes be
 desirable to just ignore the casing while generating the glossary page, but there are
@@ -113,50 +144,21 @@ cases where casing is important - especially when it comes to trademarks and log
 example is provided here, where "#gls[Context]" as well as "#gls[ConTeXt]" is contained in
 the glossary.
 
-
-#pagebreak()
-
-
-== Controlling the Show
-
-At the start of this document, just after the `import` statements, we used
-a `show` rule to define, what we want to see of the `gls` markers in the
-resulting document:
+Starting with version 0.1.0, gloss-awe supports custom sorting: A function can be provided
+to make-glossary() to determine the sort key for the entries.
 
 ```typ
-// Glossary-Entry display : this rule makes the gls entries in the document visible.
-#show figure.where(kind: "jkrb_glossary"): it => {it.body}
+#make-glossary(global-glossary, sort: x => lower(x))
 ```
 
-For review reasons, this can be changed to show up more prominently in the resulting
-document. For example like here:
+or shorter:
 
 ```typ
-// Glossary-Entry: this rule makes the glossary entries in the document more visible.
-#show figure.where(kind: "jkrb_glossary"): it => {
-    text(fill: red)[ --> '#it.body']
-}
+#make-glossary(global-glossary, sort: lower)
 ```
 
-The index markers now show up in the resulting document and can easily be reviewed.
 
-#pad(left: 2em)[
-    #block(
-            fill: luma(230),
-            inset: 12pt,
-            radius: 4pt
-        )[
-        // Glossary-Entry: this rule makes the glossary entries in the document more visible.
-        #show figure.where(kind: "jkrb_glossary"): it => {
-            text(fill: red)[ --> '#it.body']
-        }
-
-        This is a #gls(entry: "Example")[sample] to demonstrate _typst-glossary_.
-    ]
-]
-
-
-=== Hiding entries from the glossary page
+== Hiding entries from the glossary page
 
 It is also possible to hide entries (temporarily) from the generated glossary page without
 removing any markers for them from the document.
@@ -174,13 +176,25 @@ document.
     #make-glossary(glossary-pool, excluded: hidden-entries)
 ```
 
-== The Glossary Pool
 
-The pool contains the definitions for the entries. In this sample, we read the pool from
+== The Glossary Pool(s)
+
+The pool contains the definitions for the entries. In this sample, we read the pool(s) from
 one or more files -- here from typst files. But they may also be #gls[XML]-Files or other
 sources. The `make-glossary()` method can take more than one pool at once. The matching of
 marked entries is done in the order the pools where given in the parameters of the method.
 The first match wins.
+
+The pools are typst dictionaries, where the key is the marked word. The entry under this
+key is itself a dictionary, containing one or more entries with well known keys:
+
+- description\
+  This is the description of the marked word.
+
+- link\
+  This optional entry can contain an external link (URL).
+
+more well known entries may come in future versions.
 
 
 == The Glossary Page
@@ -190,9 +204,18 @@ course, it can be embedded into an appropriately formatted environment, like thi
 
 ```typ
 #columns(2)[
-    #make-glossary(glossary-pool)
+    #make-glossary(glossary-pool, sort-key: lower)
 ]
 ```
+
+
+The next sample uses two different pools: a specific pool and a global pool.
+```typ
+#columns(2)[
+    #make-glossary(specific-pool, glossary-pool, sort-key: lower)
+]
+```
+
 
 = Why Having a Glossary in Times of Search Functionality?
 
@@ -218,9 +241,7 @@ words, but that's another story.
 #pagebreak()
 
 
-= Glossary
-
-<Glossary>
+= Glossary<Glossary>
 
 To create the glossary page, we load the #gls(entry: "Glossary Pool")[glossary~pool] from
 a file and call the `make-glossary()` function with it.
@@ -237,7 +258,8 @@ Here we generate the glossary page with referenced entries in two columns:
 #import "/Global/GlossaryPool.typ": glossary-pool
 
 #columns(2)[
-    #make-glossary(glossary-pool, excluded: hidden-entries)
+    // Here we emit the actual glossary page; we use the lower function to sort the entries.
+    #make-glossary(glossary-pool, excluded: hidden-entries, sort-key: lower)
 ]
 
 #pagebreak(weak: true)
@@ -253,5 +275,7 @@ This Glossary uses an additional glossary pool file to resolve the marked entrie
 #import "/Global/LocalGlossaryPool.typ": local-glossary-pool
 
 #columns(2)[
+    // Here we emit the actual glossary page; we do not provide a specific function
+    // to sort the entries in this case.
     #make-glossary(local-glossary-pool, glossary-pool, excluded: hidden-entries)
 ]
