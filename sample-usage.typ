@@ -18,7 +18,7 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[A Glossary Package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.1.0 (29.1.2024)]
+    #text(size: 12pt)[Version 0.1.2 (1.6.2024)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #v(4em)
@@ -33,16 +33,18 @@
 
         This package can create a glossary for a document. The glossary entries are pulled from a
         pool of entries using only entries, that are marked in the document. The package creates
-        warnings for marked entries, that cannot be found in the entry pool.
+        warnings for marked entries, that cannot be found in the entry pool, but this warnings can
+        be suppressed with a parameter to the `make-glossary()` function.
 
+        // Here we use the optional `showmarker` parameter to format the marked entry.
         Using the glossary package in a
-        #gls(entry: "Typst", showmarker: m => text(weight: "bold", fill: green, m), [typst])
+        #gls(entry: "Typst", showmarker: m => text(weight: "bold", fill: teal, m), [typst])
         document consists of some simple steps:
 
         + Importing the package `gloss-awe`.
         + Marking the words or phrases to include in the glossary with `gls[]`.
         + Optional: Defining a showmarker for the marker.
-        + Read in one or more glossary pool(s) (from file(s) or elsewhere).
+        + Read in one or more glossary pool(s) (from file(s) or create it in the document itself).
         + Generating the glossary page by calling the `make-glossary(..glossary-pool)` function.
 
     ],
@@ -72,33 +74,35 @@ breaking changes in its next #gls[iteration].
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/gloss-awe:0.1.0": *
+    #import "@preview/gloss-awe:0.1.2": *
 ```
 
-Note, that the version number ("0.1.0") have to be adapted to get the wanted version.
+Note, that the version number ("0.1.2") have to be adapted to get the wanted version.
 
 
 == Marking of Entries
 
 We have marked several words to be included in the glossary page at the end of the
-document. Its location in the text gets marked, and later it is shown as a page reference
-on the glossary page.
+document. The marked entries are shown on the glossary page.
 
 ```typ
-This is a #gls[sample] to demonstrate _glossary_.
+This is a #gls[Sample] to demonstrate the 'gloss-awe' package.
 ```
 
-The previous markup marks "sample" as reference for the glossary. If "Entry Phrase" is
+The previous markup marks "Sample" as reference for the glossary. If "Sample" is
 contained in the Glossary-Pool, it will be included into the resulting glossary page. If
 the Entry in the pool has a different key word, the following marker syntax can be used:
 
 
 ```typ
-This is a #gls(entry: "example")[sample] to demonstrate _glossary_.
+This is a #gls(entry: "Example")[Sample] to demonstrate the 'gloss-awe' package.
 ```
 
-In this case, the entry for "example" is taken from the glossary pool, while in the
-document the term "sample" is used.
+In this case, the entry for "Example" is taken from the glossary pool, while in the
+document the term "Sample" is used.
+
+The `entry` parameter should also be used, if the entry text (display) is some rich
+content, like a math expression.
 
 
 === Complex Content
@@ -108,22 +112,55 @@ containing a whitespace, it is a good idea to use the entry parameter of the
 `gls`-function, to map it to a non-complex entry in a glossary pool, or, create the pool
 entry with a string as its key (see sample code!).
 
+Other, even more complex content, may definitely need an entry text given. The entry text
+controls where the entry is sorted in, and also is it used for the lookup in the glossary
+pools.
 
-=== Glossary Entries that are not in the Documents Content
+```typ
+#gls(entry: "Kreisfläche", $A=pi r^2$)
+
+#gls(entry: "E=MC2", $ E=m c^2 $)
+
+#gls(entry:"I1" ,$ I = rho^2 * sigma^3 $)
+```
+
+#v(2em)
+
+#gls(entry: "Kreisfläche", $A=pi r^2$)
+
+#gls(entry: "E=MC2", $ E=m c^2 $)
+
+#gls(entry:"I1" ,[$ I = rho^2 * sigma^3 $])
+
+
+=== Glossary Entries that are not visible in the Documents Content
 
 It is also possible to reference glossary entries without having them occur in the content
 of the document. They will only appear in the glossary. The function
 `#gls-add[Keyword]` can be used to create such a reference.
 
-#gls-add[Amaranth]
+
+Here we use different notations to add entries with `gls-add()`:
+
+```typ
+#gls-add[Calcium]
+#gls-add("Beryllium")
+#gls-add[Potassium - Hydrochloride]
+#gls-add["Iron"]
+```
+
+#gls-add[Calcium]
+#gls-add("Beryllium")
+#gls-add[Potassium - Hydrochloride]
+#gls-add["Iron"]
 
 
 == Defining a showmarker
 
-For review reasons, the marked entries can be mae more visible in the resulting
+For review reasons, the marked entries can be made more visible in the resulting
 document. For example like here:
 
-// Here we define to show the marked glossary entries ...
+// Show the marked glossary entries ...
 #let my-gls = gls.with(showmarker: w => text(fill: teal, [#w]))
 
 ```typ
@@ -134,11 +171,15 @@ This function can be used to mark entries that then appear colored in the
 #my-gls[typst] document.
 
 The index markers now show up in the resulting document and can easily be reviewed.
+To define this behavior generally, the gls function can be redefined like this:
 
+```typ
+#let gls = gls.with(showmarker: w => text(fill: teal, [#w]))
+```
 
 == Casing
 
-Note that the #gls(entry: "Casing")[casing] of the entries matter. It may sometimes be
+Note that the #gls(entry: "Casing")[casing] of the entries matters. It may sometimes be
 desirable to just ignore the casing while generating the glossary page, but there are
 cases where casing is important - especially when it comes to trademarks and logos. An
 example is provided here, where "#gls[Context]" as well as "#gls[ConTeXt]" is contained in
@@ -204,9 +245,13 @@ course, it can be embedded into an appropriately formatted environment, like thi
 
 ```typ
 #columns(2)[
-    #make-glossary(glossary-pool, sort-key: lower)
+    #make-glossary(glossary-pool, sort-key: lower, suppress-missing: false)
 ]
 ```
+
+Note: the parameter `suppress-missing` is set to false (which is the default). So marked
+entries that could not be found in the provided glossary pools, are marked with a
+#text(red, "No glossary entry") on the glossary page.
 
 
 The next sample uses two different pools: a specific pool and a global pool.
@@ -217,7 +262,8 @@ The next sample uses two different pools: a specific pool and a global pool.
 ```
 
 
-= Why Having a Glossary in Times of Search Functionality?
+
+= Why Having a Glossary in Times of Search Functionality on the Internet?
 
 A well-defined Glossary can be very helpful in documents where very specific meanings of
 certain Terms are used. For example, the term "Context". In a specific document it
@@ -259,7 +305,10 @@ Here we generate the glossary page with referenced entries in two columns:
 
 #columns(2)[
     // Here we emit the actual glossary page; we use the lower function to sort the entries.
-    #make-glossary(glossary-pool, excluded: hidden-entries, sort-key: lower)
+    #make-glossary(glossary-pool,
+                   excluded: hidden-entries,
+                   sort-key: lower,
+                   suppress-missing: false)
 ]
 
 #pagebreak(weak: true)
@@ -273,9 +322,10 @@ This Glossary uses an additional glossary pool file to resolve the marked entrie
 
 #import "/Global/GlossaryPool.typ": glossary-pool
 #import "/Global/LocalGlossaryPool.typ": local-glossary-pool
+#let emptyGlossary = ()  // This is to test, if an empty glossary is ignored.
 
 #columns(2)[
     // Here we emit the actual glossary page; we do not provide a specific function
     // to sort the entries in this case.
-    #make-glossary(local-glossary-pool, glossary-pool, excluded: hidden-entries)
+    #make-glossary(local-glossary-pool, glossary-pool, emptyGlossary, excluded: hidden-entries)
 ]

@@ -3,25 +3,29 @@
 
 // Extracts (nested) content or text to content
 #let content-as-text( element, sep: "" ) = {
-    if type(element) == "content" {
+    if element == none {
+        return none
+    }
+
+    let elementtype = type(element)
+    if elementtype in (array, dictionary, smartquote) {
+        return none
+    }
+
+    if elementtype == content {
         if element.has("text") {
             element.text
+        // } else if element
         } else if element.has("children") {
-            element.children.map(text).join(sep)
-        } else if element.has("child") {
-            content-as-text(element.child)
+            element.children.map(c => {
+                content-as-text(c, sep: sep)
+            }).join(sep)
         } else if element.has("body") {
             content-as-text(element.body)
         } else {
-            element
+            none
         }
-    } else if type(element) in ("array", "dictionary") {
-        return ""
-    }
-    else if element == none {
-        return element
-    }
-    else {
+    } else {
         str(element)
     }
 }
@@ -29,22 +33,18 @@
 // gls[term]: Marks a term in the document as referenced.
 // gls(glossary-term)[term]: Marks a term in the document as referenced with a
 // different expression ("glossary-term") in the glossary.
-#let gls(entry: none, showmarker: m => m, display) = locate(loc => [
-    #showmarker(display)
-    #metadata((
+#let gls(entry: none, showmarker: m => m, display) = locate(loc => {
+    if showmarker != none { showmarker(display) }
+    let md = metadata((
         location: loc.position(),
         entry: content-as-text(entry),
         display: display
-    ))<jkrb-gloss-awe>
-])
+    ))
+    [#md<jkrb-gloss-awe>]
+})
 
 // Add a keyword to the glossary, even if it is not in the documents content.
-#let gls-add(entry) = locate(loc => [
-    #metadata((
-        location: loc.position(),
-        entry: content-as-text(entry),
-    ))<jkrb-gloss-awe>
-])
+#let gls-add = gls.with(showmarker: none)
 
 
 // This function creates a glossary page with entries for every term
@@ -62,18 +62,39 @@
     // Function used to sort by.
     sort-key: k => k,
 
+    // If set to true, the missing entries will be suppressed.
+    suppress-missing: false,
+
     // The glossary data.
     ..glossaries
 
     ) = {
 
-    let get-title(glossmeta) = {
-        return if glossmeta.value.entry == none { glossmeta.value.display.text } else { glossmeta.value.entry }
+    let get-str-title(glossmeta) = {
+        let val = glossmeta.value
+        return if val.entry == none {
+            if type(val.display) == str {
+                (display: val.display, entry: val.display)
+            }
+            else {
+                (display: val.display, entry: content-as-text(val.display))
+            }
+        } else {
+            if type(val.entry) == str {
+                (display: val.display, entry: val.entry)
+            }
+            else {
+                (display: val.display, entry: content-as-text(val.entry))
+            }
+        }
     }
 
     let lookup(key, glossaries) = {
         let entry = none
         for glossary in glossaries.pos() {
+            // Skip empty glossary pools
+            if glossary == none or glossary.len() == 0 { continue }
+
             if glossary.keys().contains(key) {
                 let entry = glossary.at(key)
                 return entry
@@ -91,25 +112,27 @@
         // only use the not hidden elements
         let elements = ()
         for e in all-elements {
-            if get-title(e) not in excluded {
+            if get-str-title(e) not in excluded {
                 elements.push(e)
             }
         }
 
         // extract the titles
-        let titles = elements.map(e => get-title(e)).sorted(key: sort-key)
+        let titles = elements.map(e => get-str-title(e)).sorted(key: e => sort-key(e.entry))
         for t in titles {
-            if words.contains(t) { continue }
-            words.push(t)
-            heading(t)
-            let e = lookup(t, glossaries)
+            // Skip doubles
+            if words.contains(t.entry) { continue }
+
+            words.push(t.entry)
+            heading(t.display)
+            let e = lookup(t.entry, glossaries)
             if e != none {
                 e.description
                 if e.keys().contains("link") {
                     e.link
                 }
             } else {
-                missing
+                if not suppress-missing { missing }
             }
         }
     })
