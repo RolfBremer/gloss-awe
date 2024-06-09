@@ -1,8 +1,8 @@
 // Copyright 2023 Rolf Bremer, Jutta Klebe
 
 
-// Extracts (nested) content or text to content
-#let content-as-text( element, sep: "" ) = {
+// Extracts (nested) content or text to text
+#let as-text( element, sep: "" ) = {
     if element == none {
         return none
     }
@@ -18,10 +18,10 @@
         // } else if element
         } else if element.has("children") {
             element.children.map(c => {
-                content-as-text(c, sep: sep)
+                as-text(c, sep: sep)
             }).join(sep)
         } else if element.has("body") {
-            content-as-text(element.body)
+            as-text(element.body)
         } else {
             none
         }
@@ -30,6 +30,36 @@
     }
 }
 
+#let as-text(input) = {
+  let t = type(input)
+  if input == none or input == auto {
+      ""
+  } else if t == str {
+      input
+  } else if t == label {
+      repr(input)
+  } else if t == int {
+      str(input)
+  } else if t == content {
+    if input.has("text") {
+        input.text
+    } else if input.has("children") {
+        if input.children.len() == 0 {
+          ""
+        } else {
+            input.children.map(child => as-text(child)).join("")
+        }
+    } else if input.has("body") {
+        as-text(input.body)
+    } else {
+        " "
+    }
+  } else {
+    panic("Unexpected entry type " + t + " of " + repr(input))
+  }
+}
+
+
 // gls[term]: Marks a term in the document as referenced.
 // gls(glossary-term)[term]: Marks a term in the document as referenced with a
 // different expression ("glossary-term") in the glossary.
@@ -37,7 +67,7 @@
     if showmarker != none { showmarker(display) }
     let md = metadata((
         location: loc.position(),
-        entry: content-as-text(entry),
+        entry: as-text(entry),
         display: display
     ))
     [#md<jkrb-gloss-awe>]
@@ -77,14 +107,14 @@
                 (display: val.display, entry: val.display)
             }
             else {
-                (display: val.display, entry: content-as-text(val.display))
+                (display: val.display, entry: as-text(val.display))
             }
         } else {
             if type(val.entry) == str {
                 (display: val.display, entry: val.entry)
             }
             else {
-                (display: val.display, entry: content-as-text(val.entry))
+                (display: val.display, entry: as-text(val.entry))
             }
         }
     }
