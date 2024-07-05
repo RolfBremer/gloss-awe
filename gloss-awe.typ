@@ -102,7 +102,7 @@
 
     let get-str-title(glossmeta) = {
         let val = glossmeta.value
-        return if val.entry == none {
+        return if val.entry == none or val.entry == "" {
             if type(val.display) == str {
                 (display: val.display, entry: val.display)
             }
