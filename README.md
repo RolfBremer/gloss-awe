@@ -20,6 +20,7 @@ and fine-tuning.
   * [Unknown Entries](#unknown-entries)
   * [Creating the glossary page](#creating-the-glossary-page)
 * [Changelog](#changelog)
+  * [v0.1.5](#v015)
   * [v0.1.4](#v014)
   * [v0.1.3](#v013)
   * [v0.1.2](#v012)
@@ -47,7 +48,7 @@ Typst version 0.6.0 or later).
 #### Importing via Typst Package Manager
 
 ```typ
-    #import "@preview/gloss-awe:0.1.4": *
+    #import "@preview/gloss-awe:0.1.5": *
 ```
 
 ### Marking the Entries
@@ -146,7 +147,7 @@ function. The following listing shows a complete sample document with a glossary
 sample glossary pool is contained in the main document as well:
 
 ```typ
-    #import "@preview/gloss-awe:0.1.4": *
+    #import "@preview/gloss-awe:0.1.5": *
 
     // Text settings
     #set text(font: ("Arial", "Trebuchet MS"), size: 12pt)
@@ -281,10 +282,13 @@ A more complex sample PDF is available there as well.
 
 ## Changelog
 
+### v0.1.5
+
+* Migrate deprecated locate to context.
+
 ### v0.1.4
 
 * Fix a Bug introduced in 0.1.3 where glossary entries with empty entries are not shown.
-
 
 ### v0.1.3
 

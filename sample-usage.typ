@@ -18,7 +18,7 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[A Glossary Package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.1.4 (5.7.2024)]
+    #text(size: 12pt)[Version 0.1.5 (25.7.2024)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #v(4em)
@@ -70,10 +70,10 @@ breaking changes in its next #gls[iteration].
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/gloss-awe:0.1.4": *
+    #import "@preview/gloss-awe:0.1.5": *
 ```
 
-Note, that the version number ("0.1.4") have to be adapted to get the wanted version.
+Note, that the version number ("0.1.5") have to be adapted to get the wanted version.
 
 
 == Marking of Entries
